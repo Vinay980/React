@@ -1,12 +1,9 @@
-import { useState } from 'react'
+
 import Card from './components/Card'
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  const Inc = () => {
-    setCount(count + 1)
-  }
+  
+  let newArr=[1,2,3,4,5,6,7]
 
   return (
     <>
@@ -16,8 +13,8 @@ function App() {
 
       </div>
       <div className='flex justify-around'>
-        <Card username="Vinay"/>
-        <Card />
+        <Card username="Vinay" post='Software Developer'/>
+        <Card username='JSON' myArr={newArr} />
         <Card />
         <Card />
       </div>
