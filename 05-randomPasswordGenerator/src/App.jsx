@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 
 
 function App() {
@@ -14,13 +14,24 @@ function App() {
     if (numberAllowed) str += "1234567890"
     if (charAllowed) str += "!@#$%^&*()_+"
 
-    for (let i = 1; i < length; i++) {
-      const char = Math.floor(Math.random() * str.length + 1)
+    for (let i = 0; i < length; i++) {
+      const char = Math.floor(Math.random() * str.length)
       pass += str.charAt(char)
     }
 
     setPassword(pass)
   }, [length, numberAllowed, charAllowed])
+
+  useEffect(() => {
+    generatePassword()
+  }, [length, numberAllowed, charAllowed, generatePassword])
+
+  const copyPasswordToClipboard = () =>{
+    window.navigator.clipboard.writeText(password)
+    passwordRef.current?.select()
+  }
+
+  const passwordRef = useRef(null)
 
   return (
     <>
@@ -34,9 +45,9 @@ function App() {
             value={password}
             className='outline-none w-full py-1 px-3'
             placeholder='Password'
-            readOnly
+            readOnly ref={passwordRef}
           />
-          <button className='outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0'>
+          <button onClick={copyPasswordToClipboard} className='outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0 cursor-pointer'>
             Copy
           </button>
         </div>
@@ -49,15 +60,15 @@ function App() {
             max={20}
             value={length}
             className='cursor-pointer'
-            onChange={(e) => setLength(e.target.value)}
+            onChange={(e) => setLength(Number(e.target.value))}
           />
           <label htmlFor="length">Length: {length}</label>
-          <input type="checkbox" defaultChecked={numberAllowed} onChange={() => {
-            setNumberAllowed((prev) => { !prev })
+          <input type="checkbox" className='cursor-pointer' checked={numberAllowed} onChange={() => {
+            setNumberAllowed((prev) => !prev)
           }} name="" id="" />
           <label htmlFor="number">Numbers</label>
-          <input type="checkbox" defaultChecked={charAllowed} onChange={() => {
-            setCharAllowed((prev) => { !prev })
+          <input type="checkbox" className='cursor-pointer' checked={charAllowed} onChange={() => {
+            setCharAllowed((prev) => !prev)
           }} name="" id="" />
           <label htmlFor="character">Characters </label>
         </div>
@@ -65,6 +76,6 @@ function App() {
     </>
   );
 
-}
+  }
 
-export default App
+  export default App
